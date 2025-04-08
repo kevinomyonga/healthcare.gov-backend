@@ -37,10 +37,10 @@ services:
   redis:
     image: docker.io/redis:6
     container_name: healthcare_gov_swe6160_local_redis
-    
+
     volumes:
       - healthcare_gov_swe6160_local_redis_data:/data
-    
+
 
   celeryworker:
     <<: *django

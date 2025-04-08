@@ -321,7 +321,9 @@ ACCOUNT_FORMS = {"signup": "healthcare_gov_swe6160.users.forms.UserSignupForm"}
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_ADAPTER = "healthcare_gov_swe6160.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_FORMS = {"signup": "healthcare_gov_swe6160.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {
+    "signup": "healthcare_gov_swe6160.users.forms.UserSocialSignupForm",
+}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
