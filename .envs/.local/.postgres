@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=healthcare_gov_swe6160
+POSTGRES_USER=GMzrzFcleemJbgadJJerbbBgvoqxdonh
+POSTGRES_PASSWORD=xIb3AgAwKFUWn50wVES54uC74BFEzWKrWpy6HipnEKkQd0GtDI1A8iNis26nbAal

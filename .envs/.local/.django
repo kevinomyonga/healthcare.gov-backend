@@ -1,0 +1,20 @@
+# General
+# ------------------------------------------------------------------------------
+USE_DOCKER=yes
+IPYTHONDIR=/app/.ipython
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=LIvtrMxBiVoDiuelWOrgDwxApxDUAZUu
+CELERY_FLOWER_PASSWORD=ea4TQnVPV8kDdJCM99EoScfUQ4vLDg0O2EEl75HMQrnJkTo7d4AxKMt50PIsEAZt
+
+# Superuser
+# ------------------------------------------------------------------------------
+DJANGO_ADMIN_USER=admin
+DJANGO_ADMIN_EMAIL=komyonga@gmail.com
+DJANGO_ADMIN_PASSWORD=admin
