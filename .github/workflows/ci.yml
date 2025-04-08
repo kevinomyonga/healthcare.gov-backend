@@ -40,31 +40,67 @@ jobs:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
 
+      # Add support for more platforms with QEMU (optional)
+      # https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Set up Docker Buildx (supports caching)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and cache local backend
-        uses: docker/bake-action@v6
+      # Log in to DockerHub
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
         with:
-          push: false
-          load: true
-          files: server/docker-compose.local.yml
-          targets: django
-          set: |
-            django.cache-from=type=gha,scope=django-cached-tests
-            django.cache-to=type=gha,scope=django-cached-tests,mode=max
-            postgres.cache-from=type=gha,scope=postgres-cached-tests
-            postgres.cache-to=type=gha,scope=postgres-cached-tests,mode=max
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and cache docs
-        uses: docker/bake-action@v6
-        with:
-          push: false
-          load: true
-          files: server/docker-compose.docs.yml
-          set: |
-            docs.cache-from=type=gha,scope=cached-docs
-            docs.cache-to=type=gha,scope=cached-docs,mode=max
+      # Log in to GitHub Container Registry
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      # Pull the cached images from GitHub Container Registry
+      - name: Pull Cached Image (django) from GHCR
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker pull ghcr.io/$REPO_NAME/${{ env.DJANGO_IMAGE }}:latest || echo "No cache found"
+
+      - name: Pull Cached Image (docs) from GHCR
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker pull ghcr.io/$REPO_NAME/${{ env.DOCS_IMAGE }}:latest || echo "No cache found"
+
+      # Build the Stack using Docker Compose with BuildKit cache
+      - name: Build the Stack with Cache
+        run: |
+          DOCKER_BUILDKIT=1 docker compose \
+            -f server/docker-compose.local.yml \
+            build --pull django
+
+      - name: Build the docs with Cache
+        run: |
+          DOCKER_BUILDKIT=1 docker compose \
+            -f server/docker-compose.docs.yml \
+            build --pull docs
+
+      # Push the built images back to GitHub Container Registry to update the cache
+      - name: List Docker Images
+        run: docker images
+
+      - name: Push Django Image to GitHub Container Registry
+        run: |
+          echo "Pushing Django image..."
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker tag ${{ env.DJANGO_IMAGE }}:latest ghcr.io/$REPO_NAME/${{ env.DJANGO_IMAGE }}:latest
+          docker push ghcr.io/$REPO_NAME/${{ env.DJANGO_IMAGE }}:latest || echo "Failed to push Django image."
+
+      - name: Push Docs Image to GitHub Container Registry
+        run: |
+          echo "Pushing Docs image..."
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker tag ${{ env.DOCS_IMAGE }}:latest ghcr.io/$REPO_NAME/${{ env.DOCS_IMAGE }}:latest
+          docker push ghcr.io/$REPO_NAME/${{ env.DOCS_IMAGE }}:latest || echo "Failed to push Docs image."
 
       - name: Check DB Migrations
         run: docker compose -f server/docker-compose.local.yml run --rm django python manage.py makemigrations --check
