@@ -16,10 +16,10 @@ services:
     volumes:
       - .:/app:z
     env_file:
-      - ../.envs/.local/.django
-      - ../.envs/.local/.postgres
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
     ports:
-      - "8000:8000"
+      - '8000:8000'
     command: /start
 
   postgres:
@@ -32,14 +32,15 @@ services:
       - healthcare_gov_swe6160_local_postgres_data:/var/lib/postgresql/data
       - healthcare_gov_swe6160_local_postgres_data_backups:/backups
     env_file:
-      - ../.envs/.local/.postgres
+      - ./.envs/.local/.postgres
 
   redis:
     image: docker.io/redis:6
     container_name: healthcare_gov_swe6160_local_redis
-
+    
     volumes:
       - healthcare_gov_swe6160_local_redis_data:/data
+    
 
   celeryworker:
     <<: *django
@@ -66,5 +67,5 @@ services:
     image: healthcare_gov_swe6160_local_flower
     container_name: healthcare_gov_swe6160_local_flower
     ports:
-      - "5555:5555"
+      - '5555:5555'
     command: /start-flower
