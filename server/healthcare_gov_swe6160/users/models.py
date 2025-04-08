@@ -24,3 +24,52 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+    
+
+# class Doctor(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     specialization = models.CharField(max_length=255)
+#     license_number = models.CharField(max_length=100, unique=True)
+#     clinic_address = models.TextField()
+#     is_available = models.BooleanField(default=True)
+
+#     def __str__(self):
+#         return f"Dr. {self.user.name} - {self.specialization}"
+    
+# class Appointment(models.Model):
+#     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="appointments")
+#     title = models.CharField(max_length=255)
+#     description = models.TextField(blank=True)
+#     appointment_date = models.DateTimeField()
+#     duration_minutes = models.PositiveIntegerField(default=30)
+#     is_booked = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return f"{self.title} with {self.doctor.user.name} on {self.appointment_date}"
+
+# class Booking(models.Model):
+#     patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bookings")
+#     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
+#     booked_at = models.DateTimeField(auto_now_add=True)
+#     status = models.CharField(max_length=50, choices=[
+#         ("booked", "Booked"),
+#         ("cancelled", "Cancelled"),
+#         ("completed", "Completed"),
+#     ], default="booked")
+
+#     def __str__(self):
+#         return f"Booking by {self.patient.name} for {self.appointment}"
+
+# class Booking(models.Model):
+#     patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bookings")
+#     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE)
+#     booked_at = models.DateTimeField(auto_now_add=True)
+#     status = models.CharField(max_length=50, choices=[
+#         ("booked", "Booked"),
+#         ("cancelled", "Cancelled"),
+#         ("completed", "Completed"),
+#     ], default="booked")
+
+#     def __str__(self):
+#         return f"Booking by {self.patient.name} for {self.appointment}"
+
