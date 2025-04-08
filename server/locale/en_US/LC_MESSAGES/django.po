@@ -1,0 +1,12 @@
+# Translations for the Healthcare Gov SWE6160 project
+# Copyright (C) 2025 Kevin Omyonga
+# Kevin Omyonga <komyonga@gmail.com>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 2025.4.0\n"
+"Language: en-US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
